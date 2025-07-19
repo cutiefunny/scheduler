@@ -1,95 +1,65 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+// app/page.js
+'use client';
 
-export default function Home() {
+import React, { useState } from 'react';
+import styles from './page.module.css'; // CSS 모듈 임포트
+
+// 더미 스케줄 데이터
+const dummySchedules = [
+  { id: 1, date: '2025-07-19', time: '10:00', title: '팀 회의', description: '주간 업무 진행 상황 공유' },
+  { id: 2, date: '2025-07-19', time: '14:30', title: '클라이언트 미팅', description: '새 프로젝트 제안' },
+  { id: 3, date: '2025-07-20', time: '09:00', title: '개인 개발 시간', description: '새로운 기술 스택 학습' },
+  { id: 4, date: '2025-07-21', time: '11:00', title: '코드 리뷰', description: 'PR 확인 및 피드백' },
+];
+
+export default function SchedulerPage() {
+  const [selectedDate, setSelectedDate] = useState('2025-07-19');
+
+  const schedulesForSelectedDate = dummySchedules.filter(
+    (schedule) => schedule.date === selectedDate
+  );
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    // styles 객체의 클래스 이름 사용
+    <div className={styles.container}>
+      <h1 className={styles.title}>간단 스케줄러</h1>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <div className={styles.datePickerContainer}>
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className={styles.dateInput}
+        />
+      </div>
+
+      <div className={styles.scheduleListContainer}>
+        <h2 className={styles.listTitle}>
+          {selectedDate}의 스케줄
+        </h2>
+
+        {schedulesForSelectedDate.length > 0 ? (
+          <ul className={styles.scheduleList}>
+            {schedulesForSelectedDate.map((schedule) => (
+              <li key={schedule.id} className={styles.scheduleItem}>
+                <div className={styles.scheduleTime}>
+                  {schedule.time}
+                </div>
+                <div>
+                  <h3 className={styles.scheduleTitle}>
+                    {schedule.title}
+                  </h3>
+                  <p className={styles.scheduleDescription}>{schedule.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className={styles.noScheduleText}>
+            선택된 날짜에 스케줄이 없습니다.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
